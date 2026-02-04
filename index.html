@@ -31,8 +31,8 @@
       font-family: "Roboto", sans-serif;
       background: var(--bg);
       color: var(--ink);
-      width: 1440px;
-      min-height: 1024px;
+      width: 100%;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       padding: 38px 40px 60px 65px;
@@ -40,7 +40,7 @@
     }
 
     .page {
-      width: 1440px;
+      width: min(1440px, 100%);
       display: grid;
       gap: 28px;
     }
@@ -52,10 +52,13 @@
 
     .title {
       margin: 0;
-      font-size: 64.8px;
+      font-size: clamp(40px, 6vw, 64.8px);
       font-weight: 400;
       color: var(--green);
       letter-spacing: -0.01em;
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+      max-width: 100%;
     }
 
     .title strong {
