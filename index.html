@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AndaluciaMet - Prevision por capital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --ink: #101010;
+      --muted: #7b7979;
+      --green: #06781b;
+      --green-dark: #06781b;
+      --mint: rgba(6, 120, 27, 0.1);
+      --panel: rgba(123, 121, 121, 0.25);
+      --blue: #2f80ed;
+      --blue-light: #56ccf2;
+      --bar-bg: #cacaca;
+      --shadow: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Roboto", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      width: 1440px;
+      min-height: 1024px;
+      display: flex;
+      justify-content: center;
+      padding: 38px 40px 60px 65px;
+      overflow-x: hidden;
+    }
+
+    .page {
+      width: 1440px;
+      display: grid;
+      gap: 28px;
+    }
+
+    .header {
+      display: grid;
+      gap: 10px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 64.8px;
+      font-weight: 400;
+      color: var(--green);
+      letter-spacing: -0.01em;
+    }
+
+    .title strong {
+      font-weight: 900;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 24px;
+      max-width: 552px;
+      color: #000000;
+    }
+
+    .source {
+      margin: 0;
+      font-size: 15.43px;
+      color: #000000;
+    }
+
+    .top-grid {
+      display: grid;
+      gap: 58px;
+      grid-template-columns: repeat(3, 390px);
+      align-items: start;
+    }
+
+    .card {
+      border-radius: 15.19px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .selector-card {
+      background: var(--panel);
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      min-height: 0;
+      height: auto;
+      align-self: start;
+    }
+
+    .selector-card h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .selector-card select {
+      max-width: 145px;
+      border-radius: 10px;
+      border: 1px solid #cacaca;
+      padding: 6px 36px 6px 12px;
+      font-size: 16px;
+      background-color: #ffffff;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23006714' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 14px 14px;
+    }
+
+    .status {
+      font-size: 13px;
+      color: var(--green);
+    }
+
+    .status small {
+      display: block;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .forecast-card {
+      background: var(--mint);
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      min-height: 363px;
+    }
+
+    .forecast-card h3 {
+      margin: 0;
+      font-size: 22.78px;
+      font-weight: 400;
+    }
+
+    .main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .temp-block {
+      display: grid;
+      gap: 6px;
+    }
+
+    .temp-value {
+      font-size: 60.75px;
+      color: var(--green);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .temp-range {
+      display: grid;
+      gap: 4px;
+      color: var(--green-dark);
+      font-size: 22.78px;
+    }
+
+    .icon-wrap {
+      width: 109.36px;
+      height: 109.36px;
+      border-radius: 50%;
+      background: #2f80ed;
+      display: grid;
+      place-items: center;
+      border: 2px solid #eff4ef;
+    }
+
+    .icon-wrap svg,
+    .icon-wrap img {
+      width: 68px;
+      height: 68px;
+      display: block;
+    }
+
+    .icon-wrap img {
+      filter: brightness(0) invert(1);
+    }
+
+    .metrics {
+      display: grid;
+      gap: 8px;
+      font-size: 22.78px;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .metric strong {
+      font-weight: 700;
+    }
+
+    .wind-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: 6.08px;
+      background: #ffffff;
+      width: fit-content;
+    }
+
+    .wind-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+    }
+
+    .wind-icon svg,
+    .wind-icon img {
+      width: 34px;
+      height: 34px;
+      display: block;
+    }
+
+    .bars {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .bar-label {
+      font-size: 15.19px;
+      letter-spacing: 0.02em;
+    }
+
+    .bar {
+      height: 15.19px;
+      border-radius: 999px;
+      background: var(--bar-bg);
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .bar.blue span {
+      background: var(--blue);
+    }
+
+    .bar.green span {
+      background: var(--green);
+    }
+
+    .week {
+      display: grid;
+      gap: 18px;
+    }
+
+    .week-title {
+      font-size: 22.78px;
+      color: var(--green);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .week-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .week-card {
+      background: var(--mint);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .week-card h4 {
+      margin: 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    .week-temps {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    .sparkline {
+      width: 100%;
+      height: 140px;
+      border-radius: 16px;
+      background: #f4f6f4;
+      padding: 12px;
+    }
+
+    .week-split {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: 1.1fr 1fr;
+    }
+
+    @media (max-width: 1280px) {
+      body {
+        width: 100%;
+        padding: 32px;
+      }
+
+      .top-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .selector-card,
+      .forecast-card {
+        height: auto;
+      }
+
+      .week-split {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <h1 class="title">Andalucía<strong>Met</strong></h1>
+      <p class="subtitle">
+        Consulta la previsión del tiempo en capitales andaluzas con lecturas claras y elementos gráficos.
+      </p>
+      <p class="source">Fuente: Open-Meteo (actualización automática).</p>
+    </header>
+
+    <section class="top-grid">
+      <article class="card selector-card">
+        <h3>Elige una capital de provincia</h3>
+        <select id="city" aria-label="Selecciona una capital andaluza"></select>
+        <div class="status">
+          <span id="updated-pill">Actualizado</span>
+          <small id="status-text">Cargando datos...</small>
+        </div>
+      </article>
+
+      <article class="card forecast-card" id="today-card">
+        <h3>Hoy</h3>
+        <div class="main-row">
+          <div class="temp-block">
+            <div class="temp-value" id="today-temp">--°</div>
+            <div class="temp-range">
+              <span>Max <strong id="today-max">--°</strong></span>
+              <span>Min <strong id="today-min">--°</strong></span>
+            </div>
+          </div>
+          <div class="icon-wrap" id="today-icon"></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span>Sensación</span><strong id="today-feels">--°</strong></div>
+          <div class="metric"><span>Humedad</span><strong id="today-humidity">--%</strong></div>
+          <div class="metric"><span>Índice UV</span><strong id="today-uv">--</strong></div>
+        </div>
+        <div class="wind-pill">
+          <div class="wind-icon" id="today-wind-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 4l4 8H8l4-8z" />
+              <path d="M12 12v8" />
+            </svg>
+          </div>
+          <div>
+            <div><strong id="today-wind">-- km/h</strong></div>
+            <small id="today-wind-dir">--</small>
+          </div>
+        </div>
+        <div class="bars">
+          <div>
+            <div class="bar-label">PROB. LLUVIA</div>
+            <div class="bar blue"><span id="today-rain-bar"></span></div>
+          </div>
+          <div>
+            <div class="bar-label">ACUMULADO LLUVIA</div>
+            <div class="bar green"><span id="today-rain-mm"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card forecast-card" id="tomorrow-card">
+        <h3>Mañana</h3>
+        <div class="main-row">
+          <div class="temp-block">
+            <div class="temp-value" id="tomorrow-temp">--°</div>
+            <div class="temp-range">
+              <span>Max <strong id="tomorrow-max">--°</strong></span>
+              <span>Min <strong id="tomorrow-min">--°</strong></span>
+            </div>
+          </div>
+          <div class="icon-wrap" id="tomorrow-icon"></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span>Sensación</span><strong id="tomorrow-desc">--</strong></div>
+          <div class="metric"><span>Humedad</span><strong id="tomorrow-humidity">--%</strong></div>
+          <div class="metric"><span>Índice UV</span><strong id="tomorrow-uv">--</strong></div>
+        </div>
+        <div class="wind-pill">
+          <div class="wind-icon" id="tomorrow-wind-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 4l4 8H8l4-8z" />
+              <path d="M12 12v8" />
+            </svg>
+          </div>
+          <div>
+            <div><strong id="tomorrow-wind">-- km/h</strong></div>
+            <small id="tomorrow-wind-dir">--</small>
+          </div>
+        </div>
+        <div class="bars">
+          <div>
+            <div class="bar-label">PROB. LLUVIA</div>
+            <div class="bar blue"><span id="tomorrow-rain-bar"></span></div>
+          </div>
+          <div>
+            <div class="bar-label">ACUMULADO LLUVIA</div>
+            <div class="bar green"><span id="tomorrow-rain-mm"></span></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="week">
+      <div class="week-split">
+        <article class="card">
+          <h3 class="week-title">Semana en gráfico</h3>
+          <canvas class="sparkline" id="temp-chart" width="600" height="200"></canvas>
+        </article>
+        <article class="card">
+          <h3 class="week-title">Próximos 7 días</h3>
+          <div class="week-grid" id="week-grid"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const cities = [
+      { name: "Almería", lat: 36.8340, lon: -2.4637 },
+      { name: "Cádiz", lat: 36.5271, lon: -6.2886 },
+      { name: "Córdoba", lat: 37.8882, lon: -4.7794 },
+      { name: "Granada", lat: 37.1773, lon: -3.5986 },
+      { name: "Huelva", lat: 37.2614, lon: -6.9447 },
+      { name: "Jaén", lat: 37.7796, lon: -3.7849 },
+      { name: "Málaga", lat: 36.7213, lon: -4.4216 },
+      { name: "Sevilla", lat: 37.3891, lon: -5.9845 },
+    ];
+
+    const citySelect = document.querySelector("#city");
+    const updatedPill = document.querySelector("#updated-pill");
+    const statusText = document.querySelector("#status-text");
+
+    const fields = {
+      todayTemp: document.querySelector("#today-temp"),
+      todayMax: document.querySelector("#today-max"),
+      todayMin: document.querySelector("#today-min"),
+      todayFeels: document.querySelector("#today-feels"),
+      todayHumidity: document.querySelector("#today-humidity"),
+      todayUv: document.querySelector("#today-uv"),
+      todayRainBar: document.querySelector("#today-rain-bar"),
+      todayRainMm: document.querySelector("#today-rain-mm"),
+      todayWind: document.querySelector("#today-wind"),
+      todayWindDir: document.querySelector("#today-wind-dir"),
+      todayWindArrow: document.querySelector("#today-wind-arrow"),
+      tomorrowTemp: document.querySelector("#tomorrow-temp"),
+      tomorrowMax: document.querySelector("#tomorrow-max"),
+      tomorrowMin: document.querySelector("#tomorrow-min"),
+      tomorrowDesc: document.querySelector("#tomorrow-desc"),
+      tomorrowHumidity: document.querySelector("#tomorrow-humidity"),
+      tomorrowUv: document.querySelector("#tomorrow-uv"),
+      tomorrowRainBar: document.querySelector("#tomorrow-rain-bar"),
+      tomorrowRainMm: document.querySelector("#tomorrow-rain-mm"),
+      tomorrowWind: document.querySelector("#tomorrow-wind"),
+      tomorrowWindDir: document.querySelector("#tomorrow-wind-dir"),
+      tomorrowWindArrow: document.querySelector("#tomorrow-wind-arrow"),
+      todayIcon: document.querySelector("#today-icon"),
+      tomorrowIcon: document.querySelector("#tomorrow-icon"),
+      weekGrid: document.querySelector("#week-grid"),
+      tempChart: document.querySelector("#temp-chart"),
+    };
+
+    const clamp = (value, max = 100) => Math.max(0, Math.min(value, max));
+
+    const formatDay = (isoDate) => {
+      const date = new Date(isoDate + "T00:00:00");
+      return date.toLocaleDateString("es-ES", { weekday: "short" });
+    };
+
+    const windDirectionText = (deg) => {
+      const dirs = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"];
+      return dirs[Math.round(deg / 45) % 8];
+    };
+
+    const weatherLabel = (code) => {
+      if (code === 0) return "Despejado";
+      if (code === 1 || code === 2) return "Poco nuboso";
+      if (code === 3) return "Nuboso";
+      if (code === 45 || code === 48) return "Niebla";
+      if ([51, 53, 55, 56, 57].includes(code)) return "Llovizna";
+      if ([61, 63, 65].includes(code)) return "Lluvia";
+      if ([66, 67].includes(code)) return "Aguanieve";
+      if ([71, 73, 75, 77].includes(code)) return "Nieve";
+      if ([80, 81, 82].includes(code)) return "Chubascos";
+      if ([85, 86].includes(code)) return "Nieve";
+      if ([95, 96, 99].includes(code)) return "Tormenta";
+      return "Variable";
+    };
+
+    const iconBase = "https://cdn.jsdelivr.net/gh/basmilius/weather-icons@2.0.0/production/fill/all/";
+    const iconImg = (name, alt) => `<img src="${iconBase}${name}.svg" alt="${alt}" />`;
+
+    const weatherIcon = (code) => {
+      if (code === 0) return iconImg("clear-day", "Despejado");
+      if (code === 1 || code === 2) return iconImg("partly-cloudy-day", "Poco nuboso");
+      if (code === 3) return iconImg("overcast", "Nuboso");
+      if (code === 45 || code === 48) return iconImg("fog", "Niebla");
+      if ([51, 53, 55, 56, 57].includes(code)) return iconImg("drizzle", "Llovizna");
+      if ([61, 63, 65, 80, 81, 82].includes(code)) return iconImg("rain", "Lluvia");
+      if ([66, 67].includes(code)) return iconImg("sleet", "Aguanieve");
+      if ([71, 73, 75, 77, 85, 86].includes(code)) return iconImg("snow", "Nieve");
+      if ([95, 96, 99].includes(code)) return iconImg("thunderstorms", "Tormenta");
+      return iconImg("cloudy", "Variable");
+    };
+
+    const buildOptions = () => {
+      cities.forEach((city) => {
+        const option = document.createElement("option");
+        option.value = city.name;
+        option.textContent = city.name;
+        citySelect.appendChild(option);
+      });
+    };
+
+    const setStatus = (message) => {
+      statusText.textContent = message;
+    };
+
+    const formatTime = (isoString) => {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+    };
+
+    const apiUrl = (lat, lon) => {
+      const params = new URLSearchParams({
+        latitude: lat,
+        longitude: lon,
+        timezone: "Europe/Madrid",
+        current: "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+        hourly: "temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_direction_10m,uv_index",
+        daily: "weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant,uv_index_max",
+        forecast_days: "7",
+      });
+      return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+    };
+
+    const drawTempChart = (maxTemps, minTemps) => {
+      const canvas = fields.tempChart;
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = 24;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#f4f6f4";
+      ctx.fillRect(0, 0, width, height);
+
+      const allTemps = [...maxTemps, ...minTemps];
+      const min = Math.min(...allTemps) - 2;
+      const max = Math.max(...allTemps) + 2;
+      const stepX = (width - padding * 2) / (maxTemps.length - 1);
+
+      const yFor = (temp) => height - padding - ((temp - min) / (max - min)) * (height - padding * 2);
+
+      ctx.strokeStyle = "#0d7a2f";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      maxTemps.forEach((temp, index) => {
+        const x = padding + stepX * index;
+        const y = yFor(temp);
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      ctx.strokeStyle = "#2e78e6";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      minTemps.forEach((temp, index) => {
+        const x = padding + stepX * index;
+        const y = yFor(temp);
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = "#5a5f5b";
+      ctx.font = "12px Roboto";
+      maxTemps.forEach((temp, index) => {
+        const x = padding + stepX * index;
+        ctx.fillText(`${Math.round(temp)}°`, x - 10, yFor(temp) - 8);
+      });
+    };
+
+    const updateWeek = (daily) => {
+      fields.weekGrid.innerHTML = "";
+      const days = daily.time.slice(0, 7);
+      days.forEach((date, index) => {
+        const card = document.createElement("div");
+        card.className = "week-card";
+        card.innerHTML = `
+          <h4>${formatDay(date)}</h4>
+          <div class="icon-wrap">${weatherIcon(daily.weather_code[index])}</div>
+          <div class="week-temps">
+            <span>${Math.round(daily.temperature_2m_max[index])}°</span>
+            <span>${Math.round(daily.temperature_2m_min[index])}°</span>
+          </div>
+          <div class="bar blue"><span style="width:${clamp(daily.precipitation_probability_max[index])}%"></span></div>
+        `;
+        fields.weekGrid.appendChild(card);
+      });
+
+      drawTempChart(daily.temperature_2m_max.slice(0, 7), daily.temperature_2m_min.slice(0, 7));
+    };
+
+    const updateUI = (data) => {
+      updatedPill.textContent = `Actualizado ${formatTime(data.current.time)}`;
+
+      fields.todayTemp.textContent = `${Math.round(data.current.temperature_2m)}°`;
+      fields.todayMax.textContent = `${Math.round(data.daily.temperature_2m_max[0])}°`;
+      fields.todayMin.textContent = `${Math.round(data.daily.temperature_2m_min[0])}°`;
+      fields.todayFeels.textContent = `${Math.round(data.current.apparent_temperature)}°`;
+      fields.todayHumidity.textContent = `${Math.round(data.current.relative_humidity_2m)}%`;
+      fields.todayUv.textContent = `${Math.round(data.daily.uv_index_max[0])}`;
+      fields.todayRainBar.style.width = `${clamp(data.daily.precipitation_probability_max[0])}%`;
+      fields.todayRainMm.style.width = `${clamp(data.daily.precipitation_sum[0] * 4, 100)}%`;
+      fields.todayWind.textContent = `${Math.round(data.current.wind_speed_10m)} km/h`;
+      fields.todayWindDir.textContent = windDirectionText(data.current.wind_direction_10m);
+      fields.todayWindArrow.style.transform = `rotate(${data.current.wind_direction_10m}deg)`;
+
+      fields.tomorrowTemp.textContent = `${Math.round(data.daily.temperature_2m_max[1])}°`;
+      fields.tomorrowMax.textContent = `${Math.round(data.daily.temperature_2m_max[1])}°`;
+      fields.tomorrowMin.textContent = `${Math.round(data.daily.temperature_2m_min[1])}°`;
+      fields.tomorrowDesc.textContent = weatherLabel(data.daily.weather_code[1]);
+      const tomorrowNoon = `${data.daily.time[1]}T12:00`;
+      const tomorrowIndex = data.hourly.time.indexOf(tomorrowNoon);
+      const tomorrowHumidity = tomorrowIndex >= 0
+        ? data.hourly.relative_humidity_2m[tomorrowIndex]
+        : data.current.relative_humidity_2m;
+      fields.tomorrowHumidity.textContent = `${Math.round(tomorrowHumidity)}%`;
+      fields.tomorrowUv.textContent = `${Math.round(data.daily.uv_index_max[1])}`;
+      fields.tomorrowRainBar.style.width = `${clamp(data.daily.precipitation_probability_max[1])}%`;
+      fields.tomorrowRainMm.style.width = `${clamp(data.daily.precipitation_sum[1] * 4, 100)}%`;
+      fields.tomorrowWind.textContent = `${Math.round(data.daily.wind_speed_10m_max[1])} km/h`;
+      fields.tomorrowWindDir.textContent = windDirectionText(data.daily.wind_direction_10m_dominant[1]);
+      fields.tomorrowWindArrow.style.transform = `rotate(${data.daily.wind_direction_10m_dominant[1]}deg)`;
+
+      fields.todayIcon.innerHTML = weatherIcon(data.current.weather_code);
+      fields.tomorrowIcon.innerHTML = weatherIcon(data.daily.weather_code[1]);
+
+      updateWeek(data.daily);
+    };
+
+    const fetchWeather = async (city) => {
+      setStatus("Cargando datos reales...");
+      updatedPill.textContent = "Actualizando";
+
+      try {
+        const response = await fetch(apiUrl(city.lat, city.lon));
+        if (!response.ok) throw new Error("No se pudo obtener la previsión");
+        const data = await response.json();
+        updateUI(data);
+        setStatus(`Datos reales para ${city.name}.`);
+      } catch (error) {
+        setStatus("No se pudo cargar la previsión. Reintenta.");
+      }
+    };
+
+    buildOptions();
+    citySelect.value = "Sevilla";
+    fetchWeather(cities.find((city) => city.name === citySelect.value));
+
+    citySelect.addEventListener("change", (event) => {
+      const city = cities.find((item) => item.name === event.target.value);
+      fetchWeather(city);
+    });
+  </script>
+</body>
+</html>
